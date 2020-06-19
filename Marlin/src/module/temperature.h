@@ -596,7 +596,7 @@ class Temperature {
             start_preheat_time(ee);
         #endif
         #if ENABLED(AUTO_POWER_CONTROL)
-          powerManager.power_on();
+          powerManager.power_on("setTargetHotend:AUTO_POWER_CONTROL");
         #endif
         temp_hotend[ee].target = _MIN(celsius, temp_range[ee].maxtemp - 15);
         start_watching_hotend(ee);
@@ -642,7 +642,7 @@ class Temperature {
 
       static void setTargetBed(const int16_t celsius) {
         #if ENABLED(AUTO_POWER_CONTROL)
-          powerManager.power_on();
+          powerManager.power_on("setTargetBed");
         #endif
         temp_bed.target =
           #ifdef BED_MAXTEMP

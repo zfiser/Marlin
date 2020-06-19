@@ -60,7 +60,7 @@
       return;
     }
 
-    PSU_ON();
+    PSU_ON("M80");
 
     /**
      * If you have a switch on suicide pin, this is useful
@@ -106,7 +106,7 @@ void GcodeSuite::M81() {
   #if HAS_SUICIDE
     suicide();
   #elif ENABLED(PSU_CONTROL)
-    PSU_OFF();
+    PSU_OFF("M81");
   #endif
 
   #if HAS_LCD_MENU

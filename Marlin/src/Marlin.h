@@ -357,11 +357,11 @@ extern millis_t max_inactive_time, stepper_inactive_time;
   #define PSU_PIN_ON()  do{ OUT_WRITE(PS_ON_PIN,  PSU_ACTIVE_HIGH); powersupply_on = true; }while(0)
   #define PSU_PIN_OFF() do{ OUT_WRITE(PS_ON_PIN, !PSU_ACTIVE_HIGH); powersupply_on = false; }while(0)
   #if ENABLED(AUTO_POWER_CONTROL)
-    #define PSU_ON()  powerManager.power_on()
-    #define PSU_OFF() powerManager.power_off()
+    #define PSU_ON(A)  powerManager.power_on(A)
+    #define PSU_OFF(A) powerManager.power_off(A)
   #else
-    #define PSU_ON()  PSU_PIN_ON()
-    #define PSU_OFF() PSU_PIN_OFF()
+    #define PSU_ON(A)  PSU_PIN_ON()
+    #define PSU_OFF(A) PSU_PIN_OFF()
   #endif
 #endif
 

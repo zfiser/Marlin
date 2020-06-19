@@ -233,11 +233,20 @@ void setup_powerhold() {
   #if HAS_SUICIDE
     OUT_WRITE(SUICIDE_PIN, !SUICIDE_PIN_INVERTING);
   #endif
+  //SERIAL_ECHOPGM("setup_powerhold()");
+
   #if ENABLED(PSU_CONTROL)
+    #if ENABLED(PSU_DEFAULT_ON)
+      powersupply_on = false; PSU_ON("setup_powerhold: PSU_DEFAULT_ON");
+
+    //SERIAL_ECHO("powersupply_on: ");
+    //SERIAL_ECHO(powersupply_on);
+    //SERIAL_EOL();
+    #endif
     #if ENABLED(PSU_DEFAULT_OFF)
       powersupply_on = true;  PSU_OFF();
     #else
-      powersupply_on = false; PSU_ON();
+      powersupply_on = false; PSU_ON("setup_powerhold: PSU_DEFAULT_OFF");
     #endif
   #endif
 }
@@ -296,7 +305,7 @@ void enable_e_steppers() {
 
 void enable_all_steppers() {
   #if ENABLED(AUTO_POWER_CONTROL)
-    powerManager.power_on();
+    powerManager.power_on("enable_all_steppers: AUTO_POWER_CONTROL");
   #endif
   enable_X();
   enable_Y();
@@ -754,7 +763,7 @@ void minkill(const bool steppers_off/*=false*/) {
   steppers_off ? disable_all_steppers() : disable_e_steppers();
 
   #if ENABLED(PSU_CONTROL)
-    PSU_OFF();
+    PSU_OFF("minkill");
   #endif
 
   #if HAS_SUICIDE
@@ -862,8 +871,6 @@ void setup() {
     tmc_serial_begin();
   #endif
 
-  setup_powerhold();
-
   #if HAS_STEPPER_RESET
     disableStepperDrivers();
   #endif
@@ -886,6 +893,8 @@ void setup() {
 
   SERIAL_ECHOLNPGM("start");
   SERIAL_ECHO_START();
+
+  setup_powerhold();
 
   #if TMC_HAS_SPI
     #if DISABLED(TMC_USE_SW_SPI)

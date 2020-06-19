@@ -30,10 +30,11 @@
 class Power {
   public:
     static void check();
-    static void power_on();
-    static void power_off();
+    static void power_on(const char *);
+    static void power_off(const char *);
   private:
     static millis_t lastPowerOn;
+    static millis_t bootUpTime;
     static bool is_power_needed();
 };
 

@@ -1885,7 +1885,7 @@ bool Planner::_populate_block(block_t * const block, bool split_move,
 
   #if ENABLED(AUTO_POWER_CONTROL)
     if (block->steps.x || block->steps.y || block->steps.z)
-      powerManager.power_on();
+      powerManager.power_on("planner : AUTO_POWER_CONTROL");
   #endif
 
   // Enable active axes
@@ -1921,7 +1921,7 @@ bool Planner::_populate_block(block_t * const block, bool split_move,
   #if EXTRUDERS
     if (esteps) {
       #if ENABLED(AUTO_POWER_CONTROL)
-        powerManager.power_on();
+        powerManager.power_on("planner: esteps: AUTO_POWER_CONTROL");
       #endif
 
       #if ENABLED(DISABLE_INACTIVE_EXTRUDER) // Enable only the selected extruder

@@ -36,8 +36,12 @@
 Power powerManager;
 
 millis_t Power::lastPowerOn;
+millis_t Power::bootUpTime = millis();
 
 bool Power::is_power_needed() {
+  if (!ELAPSED(millis(), bootUpTime+5*60*1000UL)) {
+    return true;
+  }
   #if ENABLED(AUTO_POWER_FANS)
     FANS_LOOP(i) if (thermalManager.fan_speed[i]) return true;
   #endif
@@ -94,17 +98,64 @@ bool Power::is_power_needed() {
 void Power::check() {
   static millis_t nextPowerCheck = 0;
   millis_t ms = millis();
+
   if (ELAPSED(ms, nextPowerCheck)) {
+    //DEBUG_SERIAL_ECHO_START();
+    //DEBUG_SERIAL_ECHOPGM("Power::CHECK(): lastPowerOn:");
+    //DEBUG_SERIAL_ECHO(lastPowerOn);
+    //DEBUG_SERIAL_ECHOPGM(", ms: ");
+    //DEBUG_SERIAL_ECHO(ms);
+    //DEBUG_SERIAL_ECHOPGM(", diff: ");
+    //DEBUG_SERIAL_ECHO(ms-lastPowerOn);
+    //DEBUG_SERIAL_EOL();
+
     nextPowerCheck = ms + 2500UL;
-    if (is_power_needed())
-      power_on();
-    else if (!lastPowerOn || ELAPSED(ms, lastPowerOn + (POWER_TIMEOUT) * 1000UL))
-      power_off();
+    if (is_power_needed()) {
+      //DEBUG_SERIAL_ECHO_START();
+      //DEBUG_SERIAL_ECHOPGM("POWER NEEDED");
+      //DEBUG_SERIAL_EOL();
+      power_on("Power::check() is_power_needed"); 
+    } else { 
+      if (!lastPowerOn) {
+        power_off(" !lastPowerOn");
+      }
+      if (ELAPSED(ms, lastPowerOn + (POWER_TIMEOUT) * 1000UL)) {
+        power_off(" ELAPSED(ms)");
+      }
+    }
   }
 }
 
-void Power::power_on() {
+void serial_output(const char*msg)
+{
+}
+/*
+void serial_output(const char*msg)
+{
+  msg;
+#ifdef _DEBUG
+  int p= 0;
+  while (msg[p]) {
+    //DEBUG_SERIAL_ECHO(msg[p]);
+    p++;
+  }
+#endif
+}
+*/
+
+void Power::power_on(const char *from) {
   lastPowerOn = millis();
+
+  //DEBUG_SERIAL_ECHO_START();
+  //DEBUG_SERIAL_ECHOPGM("+++ Power::POWER_on() +++: ");
+  serial_output(from);
+  //DEBUG_SERIAL_EOL();
+  
+  //DEBUG_SERIAL_ECHO_START();
+  //DEBUG_SERIAL_ECHOPGM(" powersupply_on: ");
+  //DEBUG_SERIAL_ECHO(powersupply_on);
+  //DEBUG_SERIAL_EOL();
+
   if (!powersupply_on) {
     PSU_PIN_ON();
 
@@ -115,8 +166,16 @@ void Power::power_on() {
   }
 }
 
-void Power::power_off() {
-  if (powersupply_on) PSU_PIN_OFF();
+
+void Power::power_off(const char *from) {
+  //DEBUG_SERIAL_ECHO_START();
+  //DEBUG_SERIAL_ECHOPGM("--- Power::POWER_OFF() ---: ");
+  serial_output(from);
+  //DEBUG_SERIAL_EOL();
+  if (powersupply_on) {
+    PSU_PIN_OFF();
+  }
+  delay(PSU_POWEROFF_DELAY);
 }
 
 #endif // AUTO_POWER_CONTROL
