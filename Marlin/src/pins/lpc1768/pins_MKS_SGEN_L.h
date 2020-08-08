@@ -265,7 +265,7 @@
 
       #define LCD_PINS_RS                  P1_00
       #define LCD_PINS_D7                  P1_22
-      #define KILL_PIN                     -1     // NC
+      #define KILL_PIN                     P1_23    // NC
 
     #else                                         // !MKS_12864OLED_SSD1306
 
@@ -348,4 +348,4 @@
 //
 //#define PIN_P0_02                        P0_02  // AUX1 (Interrupt Capable/ADC/Serial Port 0)
 //#define PIN_P0_03                        P0_03  // AUX1 (Interrupt Capable/ADC/Serial Port 0)
-//#define PS_ON_PIN                        P1_23  // SERVO P1.23
+#define PS_ON_PIN                        P1_23  // SERVO P1.23

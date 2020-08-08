@@ -341,7 +341,7 @@ void enable_e_steppers() {
 }
 
 void enable_all_steppers() {
-  TERN_(AUTO_POWER_CONTROL, powerManager.power_on());
+  TERN_(AUTO_POWER_CONTROL, powerManager.power_on("enable_all_steppers"));
   ENABLE_AXIS_X();
   ENABLE_AXIS_Y();
   ENABLE_AXIS_Z();
