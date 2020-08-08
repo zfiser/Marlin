@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
@@ -32,6 +32,10 @@
 #include "../module/temperature.h"
 #include "../module/stepper/indirection.h"
 #include "../MarlinCore.h"
+
+#if BOTH(USE_CONTROLLER_FAN, AUTO_POWER_CONTROLLERFAN)
+  #include "controllerfan.h"
+#endif
 
 Power powerManager;
 
@@ -54,15 +58,12 @@ bool Power::is_power_needed() {
     if (controllerFan.state()) return true;
   #endif
 
-  #if ENABLED(AUTO_POWER_CHAMBER_FAN)
-    if (thermalManager.chamberfan_speed) return true;
-  #endif
+  if (TERN0(AUTO_POWER_CHAMBER_FAN, thermalManager.chamberfan_speed))
+    return true;
 
   // If any of the drivers or the bed are enabled...
   if (X_ENABLE_READ() == X_ENABLE_ON || Y_ENABLE_READ() == Y_ENABLE_ON || Z_ENABLE_READ() == Z_ENABLE_ON
-    #if HAS_HEATED_BED
-      || thermalManager.temp_bed.soft_pwm_amount > 0
-    #endif
+    || TERN0(HAS_HEATED_BED, thermalManager.temp_bed.soft_pwm_amount > 0)
     #if HAS_X2_ENABLE
       || X2_ENABLE_READ() == X_ENABLE_ON
     #endif
@@ -79,12 +80,9 @@ bool Power::is_power_needed() {
   ) return true;
 
   HOTEND_LOOP() if (thermalManager.degTargetHotend(e) > 0) return true;
+  if (TERN0(HAS_HEATED_BED, thermalManager.degTargetBed() > 0)) return true;
 
-  #if HAS_HEATED_BED
-    if (thermalManager.degTargetBed() > 0) return true;
-  #endif
-
-  #if HOTENDS && AUTO_POWER_E_TEMP
+  #if HAS_HOTEND && AUTO_POWER_E_TEMP
     HOTEND_LOOP() if (thermalManager.degHotend(e) >= AUTO_POWER_E_TEMP) return true;
   #endif
 
@@ -110,19 +108,10 @@ void Power::check() {
     //DEBUG_SERIAL_EOL();
 
     nextPowerCheck = ms + 2500UL;
-    if (is_power_needed()) {
-      //DEBUG_SERIAL_ECHO_START();
-      //DEBUG_SERIAL_ECHOPGM("POWER NEEDED");
-      //DEBUG_SERIAL_EOL();
-      power_on("Power::check() is_power_needed"); 
-    } else { 
-      if (!lastPowerOn) {
-        power_off(" !lastPowerOn");
-      }
-      if (ELAPSED(ms, lastPowerOn + (POWER_TIMEOUT) * 1000UL)) {
-        power_off(" ELAPSED(ms)");
-      }
-    }
+    if (is_power_needed())
+      power_on("Powe::check() power_on is_power_needed");
+    else if (!lastrPowerOn || ELAPSED(ms, lastPowerOn + SEC_TO_MS(POWER_TIMEOUT)))
+      power_off("Power::check() power_off is_power_needed");
   }
 }
 
@@ -158,11 +147,9 @@ void Power::power_on(const char *from) {
 
   if (!powersupply_on) {
     PSU_PIN_ON();
-
-    #if HAS_TRINAMIC_CONFIG
-      delay(PSU_POWERUP_DELAY); // Wait for power to settle
-      restore_stepper_drivers();
-    #endif
+    safe_delay(PSU_POWERUP_DELAY);
+    restore_stepper_drivers();
+    TERN_(HAS_TRINAMIC_CONFIG, safe_delay(PSU_POWERUP_DELAY));
   }
 }
 
