@@ -325,3 +325,8 @@ inline void print_xyz(const xyz_pos_t &xyz, PGM_P const prefix=nullptr, PGM_P co
 
 #define SERIAL_POS(SUFFIX,VAR) do { print_xyz(VAR, PSTR("  " STRINGIFY(VAR) "="), PSTR(" : " SUFFIX "\n")); }while(0)
 #define SERIAL_XYZ(PREFIX,V...) do { print_xyz(V, PSTR(PREFIX), nullptr); }while(0)
+
+#define DEBUG_SERIAL_ECHO_START() SERIAL_ECHO_START()
+#define DEBUG_SERIAL_ECHO(p) SERIAL_ECHO(p)
+#define DEBUG_SERIAL_ECHOPGM(p) SERIAL_ECHOPGM(p)
+#define DEBUG_SERIAL_EOL() SERIAL_EOL()
