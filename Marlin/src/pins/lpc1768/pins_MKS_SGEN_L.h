@@ -35,8 +35,8 @@
 //
 // Servos
 //
-#define SERVO0_PIN                         P1_23  // SERVO P1.23
-#define SERVO1_PIN                         P2_00  // SERVO P2.0
+//#define SERVO0_PIN                         P1_23  // SERVO P1.23
+//#define SERVO1_PIN                         P2_00  // SERVO P2.0
 
 //
 // Trinamic Stallguard pins

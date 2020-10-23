@@ -281,14 +281,23 @@ void setup_killpin() {
 
 void setup_powerhold() {
   #if HAS_SUICIDE
-    OUT_WRITE(SUICIDE_PIN, !SUICIDE_PIN_INVERTING);
+    SET_SUICIDE(!SUICIDE_PIN_INVERTING);
   #endif
-  DEBUG_SERIAL_ECHOPGM("setup_powerhold()");
+  DEBUG_SERIAL_ECHO_START();
+  DEBUG_SERIAL_ECHOPGM("setup_powerhold(): enter: powersupply_on: ");
+  DEBUG_SERIAL_ECHO(powersupply_on);
 
   #if ENABLED(PSU_CONTROL)
     powersupply_on = ENABLED(PSU_DEFAULT_OFF);
-    if (ENABLED(PSU_DEFAULT_OFF)) PSU_OFF("setup_powerhold::ENABLED(PSU_DEFAULT_OFF)"); else PSU_ON("setup_powerhold::ENABLED(PSU_DEFAULT_ON)");
+    if (ENABLED(PSU_DEFAULT_OFF)) {
+      PSU_OFF("setup_powerhold::ENABLED(PSU_DEFAULT_OFF)"); 
+    } else { 
+      PSU_ON("setup_powerhold::ENABLED(PSU_DEFAULT_ON)"); 
+    }
   #endif
+  DEBUG_SERIAL_ECHOPGM(", leave: powersupply_on: ");
+  DEBUG_SERIAL_ECHO(powersupply_on);
+  DEBUG_SERIAL_EOL();
 }
 
 /**

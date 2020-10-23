@@ -1102,7 +1102,7 @@
 //#define LCD_SHOW_E_TOTAL
 
 #if ENABLED(SHOW_BOOTSCREEN)
-  #define BOOTSCREEN_TIMEOUT 4000        // (ms) Total Duration to display the boot screen(s)
+  #define BOOTSCREEN_TIMEOUT 500        // (ms) Total Duration to display the boot screen(s)
 #endif
 
 #if HAS_GRAPHICAL_LCD && EITHER(SDSUPPORT, LCD_SET_PROGRESS_MANUALLY)
@@ -1823,7 +1823,7 @@
  *
  * Override the default value based on the driver type set in Configuration.h.
  */
-#define MINIMUM_STEPPER_PULSE 2
+//#define MINIMUM_STEPPER_PULSE 2
 
 /**
  * Maximum stepping rate (in Hz) the stepper driver allows
@@ -2225,13 +2225,13 @@
  */
 #if HAS_TRINAMIC_CONFIG
 
-  #define HOLD_MULTIPLIER    0.5  // Scales down the holding current from run current
-  #define INTERPOLATE       true  // Interpolate X/Y/Z_MICROSTEPS to 256
+  #define HOLD_MULTIPLIER    0.3  // Scales down the holding current from run current
+  #define INTERPOLATE       false  // Interpolate X/Y/Z_MICROSTEPS to 256
 
   #if AXIS_IS_TMC(X)
     #define X_CURRENT       800        // (mA) RMS current. Multiply by 1.414 for peak current.
     #define X_CURRENT_HOME  X_CURRENT  // (mA) RMS current for sensorless homing
-    #define X_MICROSTEPS     128    // 0..256
+    #define X_MICROSTEPS     16*STEPS_MULTIPLIER
     #define X_RSENSE          0.11
     #define X_CHAIN_POS      -1    // <=0 : Not chained. 1 : MCU MOSI connected. 2 : Next in chain, ...
   #endif
@@ -2247,7 +2247,7 @@
   #if AXIS_IS_TMC(Y)
     #define Y_CURRENT       800
     #define Y_CURRENT_HOME  Y_CURRENT
-    #define Y_MICROSTEPS     128
+    #define Y_MICROSTEPS     16*STEPS_MULTIPLIER
     #define Y_RSENSE          0.11
     #define Y_CHAIN_POS      -1
   #endif
@@ -2261,9 +2261,9 @@
   #endif
 
   #if AXIS_IS_TMC(Z)
-    #define Z_CURRENT       1000
+    #define Z_CURRENT       800
     #define Z_CURRENT_HOME  Z_CURRENT
-    #define Z_MICROSTEPS     32
+    #define Z_MICROSTEPS     16*STEPS_MULTIPLIER
     #define Z_RSENSE          0.11
     #define Z_CHAIN_POS      -1
   #endif
@@ -2293,15 +2293,15 @@
   #endif
 
   #if AXIS_IS_TMC(E0)
-    #define E0_CURRENT      1000
-    #define E0_MICROSTEPS    16
+    #define E0_CURRENT      700
+    #define E0_MICROSTEPS    16*STEPS_MULTIPLIER
     #define E0_RSENSE         0.11
     #define E0_CHAIN_POS     -1
   #endif
 
   #if AXIS_IS_TMC(E1)
-    #define E1_CURRENT      1000    
-    #define E1_MICROSTEPS    16
+    #define E1_CURRENT      700    
+    #define E1_MICROSTEPS    16*STEPS_MULTIPLIER
     #define E1_RSENSE         0.11
     #define E1_CHAIN_POS     -1
   #endif
@@ -2413,7 +2413,7 @@
    * Use for drivers that do not use a dedicated enable pin, but rather handle the same
    * function through a communication line such as SPI or UART.
    */
-  #define SOFTWARE_DRIVER_ENABLE
+//#define SOFTWARE_DRIVER_ENABLE
 
   /**
    * TMC2130, TMC2160, TMC2208, TMC2209, TMC5130 and TMC5160 only
@@ -2466,7 +2466,7 @@
    * STEALTHCHOP_(XY|Z|E) must be enabled to use HYBRID_THRESHOLD.
    * M913 X/Y/Z/E to live tune the setting
    */
-  #define HYBRID_THRESHOLD
+//  #define HYBRID_THRESHOLD
 
   #define X_HYBRID_THRESHOLD     100  // [mm/s]
   #define X2_HYBRID_THRESHOLD    100

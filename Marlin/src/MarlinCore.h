@@ -104,7 +104,10 @@ bool pin_is_protected(const pin_t pin);
 void protected_pin_err();
 
 #if HAS_SUICIDE
+  #define SET_SUICIDE(set) OUT_WRITE(SUICIDE_PIN, set);
   inline void suicide() { OUT_WRITE(SUICIDE_PIN, SUICIDE_PIN_INVERTING); }
+#else
+  #define SET_SUICIDE(set)
 #endif
 
 #if HAS_KILL
