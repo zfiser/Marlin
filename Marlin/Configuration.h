@@ -86,7 +86,7 @@
  */
 
 // Show the Marlin bootscreen on startup. ** ENABLE FOR PRODUCTION **
-#define SHOW_BOOTSCREEN
+//#define SHOW_BOOTSCREEN
 
 // Show the bitmap in Marlin/_Bootscreen.h on startup.
 //#define SHOW_CUSTOM_BOOTSCREEN
@@ -760,7 +760,7 @@
  *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
 #define STEPS_MULTIPLIER 8 
-#define DEFAULT_AXIS_STEPS_PER_UNIT   {  80*STEPS_MULTIPLIER, 80*STEPS_MULTIPLIER, 400*STEPS_MULTIPLIER, 400*STEPS_MULTIPLIER } //, 279 }
+#define DEFAULT_AXIS_STEPS_PER_UNIT   {  81*STEPS_MULTIPLIER, 81*STEPS_MULTIPLIER, 400*STEPS_MULTIPLIER, 400*STEPS_MULTIPLIER } //, 279 }
 
 /**
  * Default Max Feed Rate (mm/s)
@@ -1841,7 +1841,7 @@
 // Note: Test audio output with the G-Code:
 //  M300 S<frequency Hz> P<duration ms>
 //
-#define LCD_FEEDBACK_FREQUENCY_DURATION_MS 20
+#define LCD_FEEDBACK_FREQUENCY_DURATION_MS 40
 #define LCD_FEEDBACK_FREQUENCY_HZ 5000
 
 //=============================================================================
